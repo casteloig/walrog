@@ -11,7 +11,7 @@ func TestCreateWalFolder(t *testing.T) {
 	os.RemoveAll("WalFolder")
 
 	// Llama a la función que estamos probando
-	err := createWalFolder()
+	err := CreateWalFolder()
 	if err != nil {
 		t.Fatalf("CreateWalFolder() failed: %v", err)
 	}

@@ -1,13 +1,13 @@
 package core
 
 import (
-	"hash"
-	"hash/crc32"
+	"bufio"
+	"log"
 	"os"
 
 	fh "github.com/casteloig/walrog/internal/file_handler"
+	"github.com/casteloig/walrog/internal/utils"
 )
-
 
 type WalOptions struct {
 	BufferSize      uint32
@@ -15,23 +15,25 @@ type WalOptions struct {
 	FileHandlerOpts *fh.Options
 }
 
+// type BufferEntry struct {
+// 	lastSeqNo uint64      // 8 bytes
+// 	data      []byte      // data.Lenght()
+// 	crc       hash.Hash32 // 4 bytes
+// }
+
+type Wal struct {
+	Options *WalOptions
+	HotFile *os.File // File that's being used
+	Buffer  *bufio.Writer
+}
+
 var DefaultWalOptions = &WalOptions{
-	BufferSize:      2097152,  // 2Mb
+	BufferSize:      4194304,  // 4Mb
 	SegmentSize:     67108864, // 64Mb
 	FileHandlerOpts: fh.DefaultOptions,
 }
 
-type BufferEntry struct {
-	lastSeqNo uint64
-	data      []byte
-	crc       hash.Hash32
-}
-
-type Wal struct {
-	Options  	*WalOptions
-	HotFile  	*os.File // File that's being used
-	Buffer      []*BufferEntry
-}
+var lastSeqNo uint32 = 0
 
 // InitWal creates a new Wal
 func InitWal(options *WalOptions) (*Wal, error) {
@@ -47,30 +49,72 @@ func InitWal(options *WalOptions) (*Wal, error) {
 		return nil, err
 	}
 
+	// Create buffer to write to the hot file
+	// options.BufferSize is intended to be uint32 to persist across architectures,
+	// we cast it into int because the function forces to do so
+	writerBuffer := bufio.NewWriterSize(file, int(options.BufferSize))
+
 	// Create Wal and return
 	w := &Wal{
-		Options:  opts,
-		HotFile:  file,
-		Buffer:	nil,
+		Options: opts,
+		HotFile: file,
+		Buffer:  writerBuffer,
 	}
 
 	return w, nil
 }
 
 func (w *Wal) writeBuffer(data []byte) error {
+	var bufferNewBytes []byte
 
+	// First we add the LSN (4 bytes) to the buffer
+	// in []byte
+	lsnBytes := utils.Uint32ToBytes(uint32(lastSeqNo))
+	bufferNewBytes = append(bufferNewBytes, lsnBytes...)
+
+	// Then add data length (4 bytes)
+	dataLength, err := utils.IntToUint32(len(data))
+	if err != nil {
+		log.Fatal(err)
+	}
+	dataLengthBytes := utils.Uint32ToBytes(dataLength)
+	bufferNewBytes = append(bufferNewBytes, dataLengthBytes...)
+
+	// Then add data (get length from content of dataLengthBytes)
+	bufferNewBytes = append(bufferNewBytes, data...)
+
+	// Calculate CRC appending data calculating checksum
+	checksumRaw := append(lsnBytes, dataLengthBytes...)
+	checksumRaw = append(checksumRaw, data...)
+	crcBytes := utils.Uint32ToBytes(utils.CalculateCRC(checksumRaw))
+	bufferNewBytes = append(bufferNewBytes, crcBytes...)
+
+	fitsNewEntry := checkBufferNotLong(w, len(bufferNewBytes))
+	if fitsNewEntry == true {
+		w.Buffer.Write(bufferNewBytes)
+	} else {
+		log.Println("Flush to HotFile if fits or create a new one if does not fit")
+		err = w.Buffer.Flush()
+		if err != nil {
+			log.Fatalf("Error flushing to file")
+		}
+	}
+
+	return nil
+}
+
+func checkBufferNotLong(w *Wal, newEntryLength int) bool {
+	if (w.Buffer.Size() + newEntryLength) > int(w.Options.BufferSize) {
+		return false
+	}
+
+	return true
 }
 
 func (w *Wal) flushBuffer() error {
-
-}
-
-
-// encodeCRC32 returns the checksum of the data provided by the argument using IEEE poly
-func calculate (data []byte) (uint32) {
-	return crc32.ChecksumIEEE(data)
-}
-
-func validateCRC32(data uint32) {
-	crc32.
+	// TO DO
+	// check if buffer fits into HotFile
+	//		if it does, flush
+	// 		if it does not, close file, create a new one, edit HotFile and flush
+	return nil
 }
