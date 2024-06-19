@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	fileWalCounter int = 0
+	fileWalCounter int = 0 // First aproach: only use one file for wal logs
 )
 
 type Options struct {
@@ -25,7 +25,7 @@ var DefaultOptions = &Options{
 	createFileFlags: os.O_CREATE | os.O_RDWR,
 }
 
-func createWalFolder(opts Options) error {
+func CreateWalFolder(opts Options) error {
 	err := os.MkdirAll(opts.DirName, opts.DirPerms)
 	if err != nil {
 		return err
@@ -36,7 +36,6 @@ func createWalFolder(opts Options) error {
 
 func CreateWalNewFile(opts Options) (*os.File, error) {
 	filePath := path.Join(opts.DirName, "wal_"+strconv.Itoa(fileWalCounter)+".log")
-	fileWalCounter++
 
 	file, err := os.OpenFile(filePath, opts.createFileFlags, opts.FilePerms)
 	if err != nil {
@@ -47,7 +46,7 @@ func CreateWalNewFile(opts Options) (*os.File, error) {
 }
 
 func OpenWal(opts *Options) (*os.File, error) {
-	err := createWalFolder(*opts)
+	err := CreateWalFolder(*opts)
 	if err != nil {
 		return nil, err
 	}
