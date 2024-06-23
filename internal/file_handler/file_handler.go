@@ -4,12 +4,11 @@ import (
 	"io/fs"
 	"os"
 	"path"
-	"strconv"
 )
 
-var (
-	fileWalCounter int = 0 // First aproach: only use one file for wal logs
-)
+// var (
+// 	fileWalCounter int = 0 // First aproach: only use one file for wal logs
+// )
 
 type Options struct {
 	DirName         string
@@ -35,7 +34,7 @@ func CreateWalFolder(opts Options) error {
 }
 
 func CreateWalNewFile(opts Options) (*os.File, error) {
-	filePath := path.Join(opts.DirName, "wal_"+strconv.Itoa(fileWalCounter)+".log")
+	filePath := path.Join(opts.DirName, "wal_0.log")
 
 	file, err := os.OpenFile(filePath, opts.createFileFlags, opts.FilePerms)
 	if err != nil {

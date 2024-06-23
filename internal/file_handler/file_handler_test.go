@@ -5,27 +5,46 @@ import (
 	"testing"
 )
 
-// TestCreateWalFolder tests func createWalFolder()
-func TestCreateWalFolder(t *testing.T) {
-	// Limpia cualquier rastro anterior de pruebas
+func TestWalOperations(t *testing.T) {
+	// Common setup for all subtests
 	os.RemoveAll("WalFolder")
+	options := DefaultOptions
 
-	// Llama a la función que estamos probando
-	err := CreateWalFolder()
+	err := CreateWalFolder(*options)
 	if err != nil {
 		t.Fatalf("CreateWalFolder() failed: %v", err)
 	}
 
-	// Verifica que el directorio fue creado
-	if _, err := os.Stat("WalFolder"); os.IsNotExist(err) {
-		t.Fatalf("Expected WalFolder to exist")
-	}
+	t.Run("TestCreateWalFolder", func(t *testing.T) {
+		// Verifies if the folder has been created
+		_, err := os.Stat("WalFolder")
+		if err != nil {
+			t.Fatalf("Expected WalFolder to exist")
+		}
+	})
 
-	// Verifica que el archivo de ejemplo fue creado
-	if _, err := os.Stat("WalFolder/wal_0001.log"); os.IsNotExist(err) {
-		t.Fatalf("Expected WalFolder/wal_0001.log to exist")
-	}
+	t.Run("TestCreateWalFile", func(t *testing.T) {
+		// Ensure the specific file does not exist
+		os.Remove("WalFolder/wal_0.log")
 
-	// // Limpia después de la prueba
+		// Calls test function
+		file, err := CreateWalNewFile(*options)
+		if err != nil {
+			t.Fatalf("CreateWalNewFile() failed: %v", err)
+		}
+
+		// Verifies if the file has been created
+		_, err = os.Stat("WalFolder/wal_0.log")
+		if err != nil {
+			t.Fatalf("Expected wal_0.log to exist")
+		}
+
+		// Verifies if the file pointer has been returned correctly
+		if file == nil {
+			t.Fatalf("Expected WalNewFile pointer to exist")
+		}
+	})
+
+	// Clean up after all subtests
 	os.RemoveAll("WalFolder")
 }
