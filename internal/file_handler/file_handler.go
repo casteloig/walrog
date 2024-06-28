@@ -1,14 +1,15 @@
 package file_handler
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path"
 )
 
-// var (
-// 	fileWalCounter int = 0 // First aproach: only use one file for wal logs
-// )
+var (
+	fileWalCounter int = 0 // First aproach: only use one file for wal logs
+)
 
 type Options struct {
 	DirName         string
@@ -34,7 +35,9 @@ func CreateWalFolder(opts Options) error {
 }
 
 func CreateWalNewFile(opts Options) (*os.File, error) {
-	filePath := path.Join(opts.DirName, "wal_0.log")
+	fileName := fmt.Sprintf("wal_%03d.log", fileWalCounter)
+	fileWalCounter++
+	filePath := path.Join(opts.DirName, fileName)
 
 	file, err := os.OpenFile(filePath, opts.createFileFlags, opts.FilePerms)
 	if err != nil {

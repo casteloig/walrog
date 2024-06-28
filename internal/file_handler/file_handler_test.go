@@ -25,7 +25,8 @@ func TestWalOperations(t *testing.T) {
 
 	t.Run("TestCreateWalFile", func(t *testing.T) {
 		// Ensure the specific file does not exist
-		os.Remove("WalFolder/wal_0.log")
+		os.Remove("WalFolder/wal_000.log")
+		os.Remove("WalFolder/wal_001.log")
 
 		// Calls test function
 		file, err := CreateWalNewFile(*options)
@@ -34,15 +35,33 @@ func TestWalOperations(t *testing.T) {
 		}
 
 		// Verifies if the file has been created
-		_, err = os.Stat("WalFolder/wal_0.log")
+		_, err = os.Stat("WalFolder/wal_000.log")
 		if err != nil {
-			t.Fatalf("Expected wal_0.log to exist")
+			t.Fatalf("Expected wal_000.log to exist")
 		}
 
 		// Verifies if the file pointer has been returned correctly
 		if file == nil {
 			t.Fatalf("Expected WalNewFile pointer to exist")
 		}
+
+		// Calls test function again, for second wal file
+		file, err = CreateWalNewFile(*options)
+		if err != nil {
+			t.Fatalf("CreateWalNewFile() failed: %v", err)
+		}
+
+		// Verifies if the second file has been created
+		_, err = os.Stat("WalFolder/wal_001.log")
+		if err != nil {
+			t.Fatalf("Expected wal_001.log to exist")
+		}
+
+		// Verifies if the second file pointer has been returned correctly
+		if file == nil {
+			t.Fatalf("Expected WalNewFile pointer to exist")
+		}
+
 	})
 
 	// Clean up after all subtests
