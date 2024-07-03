@@ -19,7 +19,7 @@ type Options struct {
 }
 
 var DefaultOptions = &Options{
-	DirName:         "WalFolder",
+	DirName:         "/tmp/WalFolder",
 	DirPerms:        0755,
 	FilePerms:       0640,
 	createFileFlags: os.O_CREATE | os.O_RDWR,
