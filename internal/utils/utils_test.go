@@ -135,5 +135,48 @@ func TestCalculateCRConBytes(t *testing.T) {
 			}
 		})
 	}
+}
 
+// Test function for appendBytesToSlice method
+func TestAppendBytesToSlice(t *testing.T) {
+	testCases := []struct {
+		name       string
+		buf        []byte
+		newElement []byte
+		expected   []byte
+	}{
+		{
+			name:       "Append to empty buffer",
+			buf:        []byte{},
+			newElement: []byte{1, 2, 3},
+			expected:   []byte{1, 2, 3},
+		},
+		{
+			name:       "Append to non-empty buffer",
+			buf:        []byte{1, 2, 3},
+			newElement: []byte{4, 5, 6},
+			expected:   []byte{1, 2, 3, 4, 5, 6},
+		},
+		{
+			name:       "Append empty slice to buffer",
+			buf:        []byte{1, 2, 3},
+			newElement: []byte{},
+			expected:   []byte{1, 2, 3},
+		},
+		{
+			name:       "Append slice to itself",
+			buf:        []byte{1, 2, 3},
+			newElement: []byte{1, 2, 3},
+			expected:   []byte{1, 2, 3, 1, 2, 3},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			result := appendBytesToSlice(tt.buf, tt.newElement)
+			if !bytes.Equal(result, tt.expected) {
+				t.Errorf("Expected %v, got %v", tt.expected, result)
+			}
+		})
+	}
 }

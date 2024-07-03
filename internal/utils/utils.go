@@ -22,14 +22,20 @@ func IntToUint32(i int) (uint32, error) {
 	return uint32(i), nil
 }
 
-// numToBytes takes an integer and return its conversion to bytes.
-// The number has to be positive and within the range of uint32
+// Uint32ToBytes takes an uint32 and return its conversion to bytes.
 func Uint32ToBytes(i uint32) []byte {
 	buf := make([]byte, 4)
 	binary.LittleEndian.PutUint32(buf, i)
 	return buf
 }
 
+// BytesToUint32 takes a slice of bytes and return its conversion to uint32.
 func BytesToUint32(i []byte) uint32 {
 	return binary.LittleEndian.Uint32(i)
+}
+
+// appendBytesToSlice takes a slice of bytes as the first argument and another slice of bytes as the second argument.
+// It returns a single slice with the second argument nested within the first.
+func appendBytesToSlice(buf []byte, newElement []byte) []byte {
+	return append(buf, newElement...)
 }
