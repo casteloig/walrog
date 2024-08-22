@@ -47,17 +47,32 @@ func CreateWalNewFile(opts Options) (*os.File, error) {
 	return file, nil
 }
 
-func OpenWal(opts *Options) (*os.File, error) {
-	err := CreateWalFolder(*opts)
-	if err != nil {
-		return nil, err
-	}
+func CreateCheckpointFile(opts Options) (*os.File, error) {
+	filePath := path.Join(opts.DirName, "checkpoint")
 
-	file, err := CreateWalNewFile(*opts)
+	file, err := os.OpenFile(filePath, opts.createFileFlags, opts.FilePerms)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
 
 	return file, nil
+}
+
+func OpenWal(opts *Options) (*os.File, *os.File, error) {
+	err := CreateWalFolder(*opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	walFile, err := CreateWalNewFile(*opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	checkpointFile, err := CreateCheckpointFile(*opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return walFile, checkpointFile, nil
 }
