@@ -36,6 +36,6 @@ func BytesToUint32(i []byte) uint32 {
 
 // appendBytesToSlice takes a slice of bytes as the first argument and another slice of bytes as the second argument.
 // It returns a single slice with the second argument nested within the first.
-func appendBytesToSlice(buf []byte, newElement []byte) []byte {
+func AppendBytesToSlice(buf []byte, newElement []byte) []byte {
 	return append(buf, newElement...)
 }

@@ -173,7 +173,7 @@ func TestAppendBytesToSlice(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			result := appendBytesToSlice(tt.buf, tt.newElement)
+			result := AppendBytesToSlice(tt.buf, tt.newElement)
 			if !bytes.Equal(result, tt.expected) {
 				t.Errorf("Expected %v, got %v", tt.expected, result)
 			}
