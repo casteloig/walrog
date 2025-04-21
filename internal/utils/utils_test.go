@@ -137,7 +137,6 @@ func TestCalculateCRConBytes(t *testing.T) {
 	}
 }
 
-// Test function for appendBytesToSlice method
 func TestAppendBytesToSlice(t *testing.T) {
 	testCases := []struct {
 		name       string
