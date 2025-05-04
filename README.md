@@ -10,8 +10,12 @@
   <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg">
 </a>
 
+
 Walrog is a Go library that implements a simple yet functional Write-Ahead Logging (WAL) system. It was designed as a personal project to understand and demonstrate the fundamentals of WAL, offering reliable data persistence and crash recovery mechanisms.
 
+<div align="center">
+  <img src="assets/images/walrog.png" width="300" alt="Walrog Logo" />
+</div>
 
 ## ✨ Features
 
