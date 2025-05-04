@@ -102,6 +102,8 @@ func TestOpenWal(t *testing.T) {
         FilePerms:       0644,
         createFileFlags: os.O_CREATE | os.O_RDWR,
     }
+	// Initialize the fileWalCounter to 0
+	fileWalCounter = 0
 
     // Call OpenWal
     walFile, checkpointFile, err := OpenWal(opts)
