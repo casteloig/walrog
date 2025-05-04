@@ -1,20 +1,15 @@
 # Walrog
-<a href="https://github.com/casteloig/walrog/actions/workflows/main.yaml">
-  <img alt="Build Status" src="https://github.com/casteloig/walrog/actions/workflows/main.yaml/badge.svg?branch=main">
-</a>
-<a href="https://goreportcard.com/report/github.com/casteloig/walrog">
-  <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/casteloig/walrog" />
-</a>
-<img alt="Go Version" src="https://img.shields.io/badge/go-1.18+-blue">
-<a href="LICENSE">
-  <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg">
-</a>
+
+[![Build](https://github.com/casteloig/walrog/actions/workflows/main.yaml/badge.svg?branch=main)](https://github.com/casteloig/walrog/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/casteloig/walrog)](https://goreportcard.com/report/github.com/casteloig/walrog)
+![Go Version](https://img.shields.io/badge/go-1.18+-blue)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 
 Walrog is a Go library that implements a simple yet functional Write-Ahead Logging (WAL) system. It was designed as a personal project to understand and demonstrate the fundamentals of WAL, offering reliable data persistence and crash recovery mechanisms.
 
 <div align="center">
-  <img src="assets/images/walrog.png" width="300" alt="Walrog Logo" />
+  <img src="assets/images/walrog.png" width="260" alt="Walrog Logo" />
 </div>
 
 ## ✨ Features
