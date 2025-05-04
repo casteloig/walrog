@@ -70,58 +70,58 @@ func TestWalOperations(t *testing.T) {
 }
 
 func TestCreateCheckpointFile(t *testing.T) {
-    // Setup temporary directory for testing
-    tempDir := t.TempDir()
-    opts := Options{
-        DirName:         tempDir,
-        DirPerms:        0755,
-        FilePerms:       0644,
-        createFileFlags: os.O_CREATE | os.O_RDWR,
-    }
+	// Setup temporary directory for testing
+	tempDir := t.TempDir()
+	opts := Options{
+		DirName:         tempDir,
+		DirPerms:        0755,
+		FilePerms:       0644,
+		createFileFlags: os.O_CREATE | os.O_RDWR,
+	}
 
-    // Call CreateCheckpointFile
-    file, err := CreateCheckpointFile(opts)
-    if err != nil {
-        t.Fatalf("CreateCheckpointFile failed: %v", err)
-    }
-    defer file.Close()
+	// Call CreateCheckpointFile
+	file, err := CreateCheckpointFile(opts)
+	if err != nil {
+		t.Fatalf("CreateCheckpointFile failed: %v", err)
+	}
+	defer file.Close()
 
-    // Verify the file exists
-    checkpointPath := filepath.Join(tempDir, "checkpoint")
-    if _, err := os.Stat(checkpointPath); os.IsNotExist(err) {
-        t.Errorf("Checkpoint file was not created at %s", checkpointPath)
-    }
+	// Verify the file exists
+	checkpointPath := filepath.Join(tempDir, "checkpoint")
+	if _, err := os.Stat(checkpointPath); os.IsNotExist(err) {
+		t.Errorf("Checkpoint file was not created at %s", checkpointPath)
+	}
 }
 
 func TestOpenWal(t *testing.T) {
-    // Setup temporary directory for testing
-    tempDir := t.TempDir()
-    opts := &Options{
-        DirName:         tempDir,
-        DirPerms:        0755,
-        FilePerms:       0644,
-        createFileFlags: os.O_CREATE | os.O_RDWR,
-    }
+	// Setup temporary directory for testing
+	tempDir := t.TempDir()
+	opts := &Options{
+		DirName:         tempDir,
+		DirPerms:        0755,
+		FilePerms:       0644,
+		createFileFlags: os.O_CREATE | os.O_RDWR,
+	}
 	// Initialize the fileWalCounter to 0
 	fileWalCounter = 0
 
-    // Call OpenWal
-    walFile, checkpointFile, err := OpenWal(opts)
-    if err != nil {
-        t.Fatalf("OpenWal failed: %v", err)
-    }
-    defer walFile.Close()
-    defer checkpointFile.Close()
+	// Call OpenWal
+	walFile, checkpointFile, err := OpenWal(opts)
+	if err != nil {
+		t.Fatalf("OpenWal failed: %v", err)
+	}
+	defer walFile.Close()
+	defer checkpointFile.Close()
 
-    // Verify the WAL file exists
-    walFilePath := filepath.Join(tempDir, "wal_000.log")
-    if _, err := os.Stat(walFilePath); os.IsNotExist(err) {
-        t.Errorf("WAL file was not created at %s", walFilePath)
-    }
+	// Verify the WAL file exists
+	walFilePath := filepath.Join(tempDir, "wal_000.log")
+	if _, err := os.Stat(walFilePath); os.IsNotExist(err) {
+		t.Errorf("WAL file was not created at %s", walFilePath)
+	}
 
-    // Verify the checkpoint file exists
-    checkpointPath := filepath.Join(tempDir, "checkpoint")
-    if _, err := os.Stat(checkpointPath); os.IsNotExist(err) {
-        t.Errorf("Checkpoint file was not created at %s", checkpointPath)
-    }
+	// Verify the checkpoint file exists
+	checkpointPath := filepath.Join(tempDir, "checkpoint")
+	if _, err := os.Stat(checkpointPath); os.IsNotExist(err) {
+		t.Errorf("Checkpoint file was not created at %s", checkpointPath)
+	}
 }
