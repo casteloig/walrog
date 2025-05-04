@@ -1,6 +1,6 @@
 # Walrog
-<a href="https://github.com/casteloig/walrog/actions/workflows/main.yml">
-  <img alt="Build Status" src="https://github.com/casteloig/walrog/actions/workflows/go.yml/badge.svg?branch=main">
+<a href="https://github.com/casteloig/walrog/actions/workflows/main.yaml">
+  <img alt="Build Status" src="https://github.com/casteloig/walrog/actions/workflows/main.yaml/badge.svg?branch=main">
 </a>
 <a href="https://goreportcard.com/report/github.com/casteloig/walrog">
   <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/casteloig/walrog" />
