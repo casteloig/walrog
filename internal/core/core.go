@@ -42,11 +42,11 @@ type RecoveredEntry struct {
 // InitWal will delete all content in the Wal folder.
 //
 // Parameters:
-// 	- options: A pointer to WalOptions containing the configuration for the WAL.
+//   - options: A pointer to WalOptions containing the configuration for the WAL.
 //
 // Returns:
-// 	- A pointer to the initialized Wal instance.
-// 	- An error if the initialization fails, or nil if successful.
+//   - A pointer to the initialized Wal instance.
+//   - An error if the initialization fails, or nil if successful.
 func InitWal(options *WalOptions) (*Wal, error) {
 	// Get default options if no arg passed to function
 	if options == nil {
@@ -78,10 +78,10 @@ func InitWal(options *WalOptions) (*Wal, error) {
 // It first writes to a buffer, which will be dumped into a file when reaching WalOptions.BufferSize.
 //
 // Parameters:
-//  - data: A slice of bytes to be written to the WAL.
+//   - data: A slice of bytes to be written to the WAL.
 //
 // Returns:
-//  - An error if the write operation fails.
+//   - An error if the write operation fails.
 func (w *Wal) WriteBuffer(data []byte) error {
 
 	// create temp buffer before flushing any data
@@ -103,11 +103,11 @@ func (w *Wal) WriteBuffer(data []byte) error {
 // If the CRC matches, the entry is stored in a slice of RecoveredEntry.
 //
 // Parameters:
-//  - file: A pointer to the file to be recovered.
+//   - file: A pointer to the file to be recovered.
 //
 // Returns:
-//  - A slice of RecoveredEntry containing the valid entries.
-//  - An error if any issues occur during recovery.
+//   - A slice of RecoveredEntry containing the valid entries.
+//   - An error if any issues occur during recovery.
 func recoverFile(file *os.File) ([]RecoveredEntry, error) {
 	var records []RecoveredEntry
 
@@ -173,7 +173,7 @@ func recoverFile(file *os.File) ([]RecoveredEntry, error) {
 // FlushBuffer forces a flush of the buffer to the segment/WAL file.
 //
 // Returns:
-//  - An error if the flush operation fails.
+//   - An error if the flush operation fails.
 func (w *Wal) FlushBuffer() error {
 	fmt.Println("Flushing buffer to file")
 	w.segmentUsed += w.Buffer.Buffered()
@@ -187,11 +187,11 @@ func (w *Wal) FlushBuffer() error {
 // checkBufferOverflow checks if the new data fits within the buffer.
 //
 // Parameters:
-//  - newEntryLength: The length of the new data to be written.
+//   - newEntryLength: The length of the new data to be written.
 //
 // Returns:
-//  - true if the new data causes a buffer overflow.
-//  - false if the new data fits within the buffer.
+//   - true if the new data causes a buffer overflow.
+//   - false if the new data fits within the buffer.
 func (w *Wal) checkBufferOverflow(newEntryLength int) bool {
 	// If buffer is full it will flush automatically
 	return (w.Buffer.Buffered() + newEntryLength) > int(w.Options.BufferSize)
@@ -200,10 +200,10 @@ func (w *Wal) checkBufferOverflow(newEntryLength int) bool {
 // changeHotFile creates a new file/segment and updates the WAL's pointer to the new file.
 //
 // Parameters:
-//  - newFile: A pointer to the new file to be used as the hot file.
+//   - newFile: A pointer to the new file to be used as the hot file.
 //
 // Returns:
-//  - An error if the operation fails.
+//   - An error if the operation fails.
 func (w *Wal) changeHotFile(newFile *os.File) error {
 	w.HotFile = newFile
 	return nil
@@ -212,11 +212,11 @@ func (w *Wal) changeHotFile(newFile *os.File) error {
 // createTmpBuff creates a temporary buffer before writing to Bufio with all the data.
 //
 // Parameters:
-//  - data: A slice of bytes to be written to the temporary buffer.
+//   - data: A slice of bytes to be written to the temporary buffer.
 //
 // Returns:
-//  - A slice of bytes representing the temporary buffer.
-//  - An error if the operation fails.
+//   - A slice of bytes representing the temporary buffer.
+//   - An error if the operation fails.
 func (w *Wal) createTmpBuff(data []byte) ([]byte, error) {
 	var tmpBuffer []byte
 
@@ -247,10 +247,10 @@ func (w *Wal) createTmpBuff(data []byte) ([]byte, error) {
 // manageWriteFlow manages the process of writing data into the buffer and flushing it to the hot file if needed.
 //
 // Parameters:
-//  - tmpBuffer: A slice of bytes containing the data to be written.
+//   - tmpBuffer: A slice of bytes containing the data to be written.
 //
 // Returns:
-//  - An error if the write operation fails.
+//   - An error if the write operation fails.
 func (w *Wal) manageWriteFlow(tmpBuffer []byte) error {
 	// Check if tmpBuffer is bigger than Buffer max size
 	if len(tmpBuffer) > int(w.Options.BufferSize) {
@@ -297,11 +297,11 @@ func (w *Wal) manageWriteFlow(tmpBuffer []byte) error {
 // Truncate removes entries from the WAL between the specified LSN range.
 //
 // Parameters:
-//  - lsnFirst: The starting LSN of the range to truncate.
-//  - lsnLast: The ending LSN of the range to truncate.
+//   - lsnFirst: The starting LSN of the range to truncate.
+//   - lsnLast: The ending LSN of the range to truncate.
 //
 // Returns:
-//  - An error if the truncate operation fails.
+//   - An error if the truncate operation fails.
 func (w *Wal) Truncate(lsnFirst uint32, lsnLast uint32) error {
 	return nil
 }
